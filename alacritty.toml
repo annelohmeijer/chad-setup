@@ -1,0 +1,24 @@
+# themes from https://github.com/alacritty/alacritty-theme
+import = ["~/.config/alacritty/alacritty-theme/themes/gruvbox_dark.toml"]
+
+[shell]
+program = "/opt/homebrew/bin/bash"
+
+[font]
+size = 15
+
+[font.normal]
+family = "UbuntuMono Nerd Font"
+
+[window]
+decorations = "none"
+
+[window.padding]
+x = 7
+y = 0
+
+[keyboard]
+bindings = [
+  { key = "Right", mods = "Alt", chars = "\u001BF" },
+  { key = "Left",  mods = "Alt", chars = "\u001BB" },
+]
