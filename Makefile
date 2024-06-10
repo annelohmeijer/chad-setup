@@ -7,7 +7,7 @@ nvim:
 	ln -sf $(PWD)/nvim ~/.config/nvim
 
 tmux:
-	ln -sf $(PWD)/tmux/.tmux.conf ~/.tmux.conf
+	ln -sf $(PWD)/.tmux.conf ~/.tmux.conf
 
 # linux only
 fonts:
