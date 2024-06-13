@@ -1,3 +1,6 @@
 [submodule "nvim/pack/github/start/copilot.vim"]
 	path = nvim/pack/github/start/copilot.vim
 	url = https://github.com/github/copilot.vim
+[submodule "alacritty/alacritty-theme"]
+	path = alacritty/alacritty-theme
+	url = https://github.com/alacritty/alacritty-theme
