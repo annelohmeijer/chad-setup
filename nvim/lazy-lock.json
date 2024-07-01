@@ -1,7 +1,6 @@
 {
   "LazyVim": { "branch": "main", "commit": "d7c7548e09af1d26db57f10be3c77a58f010b1d5" },
   "LuaSnip": { "branch": "master", "commit": "50fcf17db7c75af80e6b6109acfbfb4504768780" },
-  "RltvNmbr.vim": { "branch": "master", "commit": "bec1eb76999d182417a523bae7752e0b91d669fe" },
   "bufferline.nvim": { "branch": "main", "commit": "99337f63f0a3c3ab9519f3d1da7618ca4f91cffe" },
   "catppuccin": { "branch": "main", "commit": "cc8e290d4c0d572171243087f8541e49be2c8764" },
   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
@@ -51,6 +50,7 @@
   "tokyonight.nvim": { "branch": "main", "commit": "719713b0515c56fcb66ed2c1acd385d3e1de7895" },
   "trouble.nvim": { "branch": "main", "commit": "4d0f0454ae2a246ec3e0ff541a347164dac23b7b" },
   "venv-selector.nvim": { "branch": "regexp", "commit": "d946b1e86212f38ff9c42e3b622a8178bbc93461" },
+  "vim-abolish": { "branch": "master", "commit": "dcbfe065297d31823561ba787f51056c147aa682" },
   "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" },
   "wd-nvim": { "branch": "master", "commit": "384152f602d49437dc9c47a1bc9aab8c6b1d4a70" },
   "which-key.nvim": { "branch": "main", "commit": "0099511294f16b81c696004fa6a403b0ae61f7a0" }
