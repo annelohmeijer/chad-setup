@@ -2,4 +2,6 @@
 return {
   -- Other plugins
   { "tnagorra/wd-nvim" },
+  { "tpope/vim-surround" },
+  { "tpope/vim-abolish" },
 }
