@@ -9,6 +9,13 @@ return {
     require("neo-tree").setup({
       -- follow your cwd with WD
       follow = true,
+      filesystem = { 
+        filtered_items = {
+          visible = true,
+          hide_dotfiles = false,
+          hide_gitignored = true,
+        }
+      }
     })
   end,
 }
