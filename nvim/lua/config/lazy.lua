@@ -30,7 +30,7 @@ require("lazy").setup({
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
   install = { colorscheme = { "tokyonight", "habamax" } },
-  checker = { enabled = false }, -- automatically check for plugin updates
+  checker = { enabled = true }, -- automatically check for plugin updates
   performance = {
     rtp = {
       -- disable some rtp plugins
@@ -84,14 +84,15 @@ require("lspconfig").pylsp.setup({
           enabled = false,
           executable = "pylint",
         },
-        ruff = {
-          enabled = true,
-        },
+        -- ruff = {
+        --   enabled = true,
+        -- },
         pyflakes = {
           enabled = false,
         },
         pycodestyle = {
           enabled = false,
+          maxLineLength = 88,
         },
         jedi_completion = {
           fuzzy = true,
