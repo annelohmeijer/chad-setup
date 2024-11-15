@@ -64,42 +64,42 @@ require("mason").setup({
 })
 
 -- https://github.com/williamboman/mason-lspconfig.nvim
-require("mason-lspconfig").setup({
-  ensure_installed = { "ruff", "pylsp" },
-})
-
--- https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
-require("lspconfig").pylsp.setup({
-  settings = {
-    pylsp = {
-      plugins = {
-        black = {
-          enabled = true,
-        },
-        isort = {
-          enabled = true,
-        },
-        -- pylint is only works from a binary but will throw errors for imports
-        pylint = {
-          enabled = false,
-          executable = "pylint",
-        },
-        -- ruff = {
-        --   enabled = true,
-        -- },
-        pyflakes = {
-          enabled = false,
-        },
-        pycodestyle = {
-          enabled = false,
-          maxLineLength = 88,
-        },
-        jedi_completion = {
-          fuzzy = true,
-        },
-      },
-    },
-  },
-})
+-- require("mason-lspconfig").setup({
+--   ensure_installed = { "ruff", "pylsp" },
+-- })
+--
+-- -- https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
+-- require("lspconfig").pylsp.setup({
+--   settings = {
+--     pylsp = {
+--       plugins = {
+--         black = {
+--           enabled = true,
+--         },
+--         isort = {
+--           enabled = true,
+--         },
+--         -- pylint is only works from a binary but will throw errors for imports
+--         pylint = {
+--           enabled = false,
+--           executable = "pylint",
+--         },
+--         -- ruff = {
+--         --   enabled = true,
+--         -- },
+--         pyflakes = {
+--           enabled = false,
+--         },
+--         pycodestyle = {
+--           enabled = false,
+--           maxLineLength = 88,
+--         },
+--         jedi_completion = {
+--           fuzzy = true,
+--         },
+--       },
+--     },
+--   },
+-- })
 -- https://github.com/neovim/nvim-lspconfig
 -- require("lspconfig").jedi_language_server.setup({})
