@@ -7,3 +7,6 @@ vim.api.nvim_set_keymap("n", "<leader>w", ":bp|bd#<CR>", { noremap = true, silen
 -- telescope
 vim.keymap.set("n", "<leader><leader>", ":Telescope find_files<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>sg", ":Telescope live_grep<CR>", { noremap = true, silent = true })
+
+-- lazydocker
+vim.keymap.set("n", "<leader>k", "<cmd>LazyDocker<CR>", { desc = "Toggle LazyDocker", noremap = true, silent = true })
