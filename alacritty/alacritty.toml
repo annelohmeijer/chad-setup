@@ -1,7 +1,5 @@
-# themes from https://github.com/alacritty/alacritty-theme
-import = ["~/.config/alacritty/alacritty-theme/themes/gruvbox_dark.toml"]
 
-[shell]
+[terminal.shell]
 program = "/opt/homebrew/bin/bash"
 
 [font]
@@ -22,4 +20,10 @@ bindings = [
   { key = "Right", mods = "Alt", chars = "\u001BF" },
   { key = "Left",  mods = "Alt", chars = "\u001BB" },
 ]
+
+[general]
+# themes from https://github.com/alacritty/alacritty-theme
+import = ["~/.config/alacritty/alacritty-theme/themes/gruvbox_dark.toml"]
+
+[terminal]
 
