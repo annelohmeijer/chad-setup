@@ -10,3 +10,13 @@ vim.keymap.set("n", "<leader>sg", ":Telescope live_grep<CR>", { noremap = true, 
 
 -- lazydocker
 vim.keymap.set("n", "<leader>k", "<cmd>LazyDocker<CR>", { desc = "Toggle LazyDocker", noremap = true, silent = true })
+
+vim.api.nvim_create_user_command("ReloadConfig", function()
+  for name, _ in pairs(package.loaded) do
+    if name:match("^config") then
+      package.loaded[name] = nil
+    end
+  end
+  dofile(vim.fn.stdpath("config") .. "/init.lua")
+  print("Config reloaded!")
+end, {})

@@ -78,7 +78,7 @@ return {
         --   --   ["textDocument/publishDiagnostics"] = function() end,
         --   -- },
         -- },
-        jedi_language_server = {},
+        jedi_language_server = false,
       },
       setup = {
         pylsp = function()
