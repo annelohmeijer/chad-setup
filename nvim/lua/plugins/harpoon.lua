@@ -9,9 +9,9 @@ return {
     harpoon:setup()
 
     -- Register which-key group
-    require("which-key").register({
-      ["<leader>h"] = { name = "+harpoon" },
-    })
+    -- require("which-key").register({
+    --   { "<leader>h", group = "harpoon" },
+    -- })
 
     -- Add current file to harpoon
     vim.keymap.set("n", "<leader>ha", function()
