@@ -5,8 +5,12 @@
 vim.api.nvim_set_keymap("n", "<leader>w", ":bp|bd#<CR>", { noremap = true, silent = true })
 
 -- telescope
-vim.keymap.set("n", "<leader><leader>", ":Telescope find_files<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>sg", ":Telescope live_grep<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader><leader>", function()
+  require("telescope.builtin").find_files({ hidden = true })
+end, { desc = "Find files inluding hidden", noremap = true, silent = true })
+vim.keymap.set("n", "<leader>sg", function()
+  require("telescope.builtin").live_grep()
+end, { desc = "Live grep (including hidden)", noremap = true, silent = true })
 
 -- lazydocker
 vim.keymap.set("n", "<leader>k", "<cmd>LazyDocker<CR>", { desc = "Toggle LazyDocker", noremap = true, silent = true })
