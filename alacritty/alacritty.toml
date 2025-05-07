@@ -1,6 +1,5 @@
-
 [terminal.shell]
-program = "/opt/homebrew/bin/bash"
+program = "/Users/annelohmeijer/.config/alacritty/start-bash.sh"
 
 [font]
 size = 15
