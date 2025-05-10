@@ -1,5 +1,15 @@
 return {
   "nvim-telescope/telescope.nvim",
+  dependencies = {
+    {
+      "nvim-telescope/telescope-fzf-native.nvim",
+      build = "make",
+      cond = vim.fn.executable("make") == 1,
+      config = function()
+        require("telescope").load_extension("fzf")
+      end,
+    },
+  },
   opts = {
     defaults = {
       vimgrep_arguments = {
@@ -10,9 +20,9 @@ return {
         "--line-number",
         "--column",
         "--smart-case",
-        "--hidden", -- <--- INCLUDE HIDDEN FILES
+        "--hidden",
         "--glob",
-        "!.git/*", -- <--- EXCLUDE .git folder for performance
+        "!.git/*",
       },
     },
   },

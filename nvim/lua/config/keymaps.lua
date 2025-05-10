@@ -13,7 +13,13 @@ vim.keymap.set("n", "<leader>sg", function()
 end, { desc = "Live grep (including hidden)", noremap = true, silent = true })
 
 -- lazydocker
-vim.keymap.set("n", "<leader>k", "<cmd>LazyDocker<CR>", { desc = "Toggle LazyDocker", noremap = true, silent = true })
+
+vim.keymap.set(
+  "n",
+  "<leader>k",
+  "<Cmd>lua LazyDocker.toggle()<CR>",
+  { desc = "Toggle LazyDocker", noremap = true, silent = true }
+)
 
 vim.api.nvim_create_user_command("ReloadConfig", function()
   for name, _ in pairs(package.loaded) do
@@ -24,3 +30,14 @@ vim.api.nvim_create_user_command("ReloadConfig", function()
   dofile(vim.fn.stdpath("config") .. "/init.lua")
   print("Config reloaded!")
 end, {})
+
+-- markdown
+vim.keymap.set("n", "<leader>xt", function()
+  local line = vim.api.nvim_get_current_line()
+  if line:find("%- %[ %]") then
+    line = line:gsub("%- %[ %]", "- [x]")
+  elseif line:find("%- %[x%]") then
+    line = line:gsub("%- %[x%]", "- [ ]")
+  end
+  vim.api.nvim_set_current_line(line)
+end, { desc = "Toggle task checkbox" })

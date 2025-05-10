@@ -61,7 +61,7 @@ return {
                 isort = { enabled = true },
                 pycodestyle = {
                   enabled = true,
-                  maxLineLength = 88,
+                  maxLineLength = 100,
                 },
               },
             },
