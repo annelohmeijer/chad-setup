@@ -34,23 +34,11 @@ alias vi=nvim
 alias ..="cd .."
 alias l="ls -lah"
 
-# if [[ "$OSTYPE" == "darwin"* ]]; then
-# 	# source "$HOME/.fzf.bash"
-# 	# echo "I'm on Mac!"
-#
-# 	# brew bash completion
-# 	[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
-# else
-# 	#	source /usr/share/fzf/key-bindings.bash
-# 	#	source /usr/share/fzf/completion.bash
-# 	[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-# fi
-
 # set aliases
 function gacp() {
-	git add .
-	git commit -m "$1"
-	git push origin HEAD
+  git add .
+  git commit -m "$1"
+  git push origin HEAD
 }
 alias gst="git status"
 alias gl="git pull"
