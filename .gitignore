@@ -1,2 +1,5 @@
-# API keys and other private stuff
 bash/.bash_keys
+
+lazy-lock.json
+.DS_Store
+lazyvim.json
