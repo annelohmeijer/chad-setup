@@ -1,3 +1,4 @@
+# alacritty version 0.15.0
 [font]
 size = 15
 
@@ -14,14 +15,9 @@ y = 0
 [keyboard]
 bindings = [
   { key = "Right", mods = "Alt", chars = "\u001BF" },
-  { key = "Left",  mods = "Alt", chars = "\u001BB" },
+  { key = "Left", mods = "Alt", chars = "\u001BB" },
 ]
 
 [general]
 # themes from https://github.com/alacritty/alacritty-theme
 import = ["~/.config/alacritty/alacritty-theme/themes/gruvbox_dark.toml"]
-
-[terminal]
-
-[terminal.shell]
-program = "tmux"
