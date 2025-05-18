@@ -21,6 +21,9 @@ vim.keymap.set(
   { desc = "Toggle LazyDocker", noremap = true, silent = true }
 )
 
+-- TODO: focus directly on explorer from any pane
+-- vim.keymap.set("n", "<leader>fe", ":Neotree focus<CR>", { desc = "Focus Explorer" })
+
 vim.api.nvim_create_user_command("ReloadConfig", function()
   for name, _ in pairs(package.loaded) do
     if name:match("^config") then
