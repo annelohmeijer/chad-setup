@@ -44,3 +44,9 @@ vim.keymap.set("n", "<leader>xt", function()
   end
   vim.api.nvim_set_current_line(line)
 end, { desc = "Toggle task checkbox" })
+
+-- Second Brain integration
+vim.keymap.set("n", "<leader>sb", function()
+  vim.cmd("cd ~/Second\\ Brain")
+  require("telescope.builtin").find_files({ hidden = true })
+end, { desc = "Open Second Brain" })

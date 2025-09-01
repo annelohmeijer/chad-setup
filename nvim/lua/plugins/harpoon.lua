@@ -38,5 +38,22 @@ return {
     vim.keymap.set("n", "<leader>hn", function()
       list:next()
     end, { desc = "Harpoon: Next file" })
+
+    -- Quick access with Ctrl keys
+    vim.keymap.set("n", "<C-h>", function()
+      list:select(1)
+    end, { desc = "Harpoon: File 1" })
+    
+    vim.keymap.set("n", "<C-j>", function()
+      list:select(2)
+    end, { desc = "Harpoon: File 2" })
+    
+    vim.keymap.set("n", "<C-k>", function()
+      list:select(3)
+    end, { desc = "Harpoon: File 3" })
+    
+    vim.keymap.set("n", "<C-l>", function()
+      list:select(4)
+    end, { desc = "Harpoon: File 4" })
   end,
 }
