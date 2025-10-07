@@ -2,7 +2,7 @@ return {
   -- Add `pyright` to mason
   -- TODO: check following tools -> mypy types-requests types-docutils
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = function(_, opts)
       -- vim.list_extend(opts.ensure_installed, { "pyright", "black", "ruff-lsp", "ruff" })
       vim.list_extend(opts.ensure_installed, {
@@ -11,23 +11,6 @@ return {
         "isort",
       })
     end,
-  },
-
-  -- Setup adapters as nvim-dap dependencies
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      "mfussenegger/nvim-dap-python",
-      -- stylua: ignore
-      keys = {
-        { "<leader>dPt", function() require('dap-python').test_method() end, desc = "Debug Method" },
-        { "<leader>dPc", function() require('dap-python').test_class() end,  desc = "Debug Class" },
-      },
-      config = function()
-        local path = require("mason-registry").get_package("debugpy"):get_install_path()
-        require("dap-python").setup(path .. "/venv/bin/python")
-      end,
-    },
   },
 
   -- Add `python` debugger to mason DAP to auto-install
