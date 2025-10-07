@@ -53,20 +53,6 @@ return {
     dependencies = {},
     opts = {
       servers = {
-        pylsp = {
-          mason = true,
-          settings = {
-            pylsp = {
-              plugins = {
-                isort = { enabled = true },
-                pycodestyle = {
-                  enabled = true,
-                  maxLineLength = 100,
-                },
-              },
-            },
-          },
-        },
         ruff_lsp = {
           mason = true,
           init_options = {
@@ -79,14 +65,7 @@ return {
         -- pyright = {},
       },
       setup = {
-        pylsp = function()
-          require("lazyvim.util").lsp.on_attach(function(client, _)
-            if client.name == "pylsp" then
-              -- Optionally disable hover if using another server for that
-              client.server_capabilities.hoverProvider = false
-            end
-          end)
-        end,
+
         ruff_lsp = function()
           require("lazyvim.util").lsp.on_attach(function(client, _)
             if client.name == "ruff_lsp" then
@@ -105,7 +84,7 @@ return {
     optional = true,
     opts = {
       formatters_by_ft = {
-        ["python"] = { "black", "ruff", "isort" },
+        ["python"] = { "ruff", "isort" },
       },
     },
   },
