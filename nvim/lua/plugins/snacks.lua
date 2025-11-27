@@ -1,9 +1,9 @@
+-- Disable snacks.nvim explorer in favor of neo-tree
 return {
-  "folke/snacks.nvim",
-  opts = {
-    picker = {
-      hidden = true,
-      no_ignore = true,
+  {
+    "folke/snacks.nvim",
+    opts = {
+      explorer = { enabled = false },
     },
   },
 }
