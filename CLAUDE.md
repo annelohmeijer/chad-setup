@@ -22,3 +22,6 @@ When fixing things, always go for builtin commands and short keys as much as pos
 - Gitlinker
 
 Finally, don't be afraid to suggest other useful tools that might be useful when developing (either Terraform, Python, Bash, Markdown).
+
+
+
