@@ -63,9 +63,8 @@ alias fp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}
 # search for a file with fzf and open it in vim
 alias vf='v $(fp)'
 
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
 eval "$(direnv hook bash)"
+eval "$(zoxide init bash)"
 
 # manually export LANG such that blesh does not complain
 # export LANG=en_US.UTF-8
