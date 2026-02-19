@@ -2,6 +2,10 @@
 return {
   -- Other plugins
   { "tnagorra/wd-nvim" },
-  { "tpope/vim-surround" },
+  {
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    opts = {},
+  },
   { "tpope/vim-abolish" },
 }

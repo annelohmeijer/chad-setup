@@ -6,6 +6,7 @@ return {
     opts = function(_, opts)
       -- vim.list_extend(opts.ensure_installed, { "pyright", "black", "ruff-lsp", "ruff" })
       vim.list_extend(opts.ensure_installed, {
+        "pyright",
         "black",
         "ruff",
         "isort",
@@ -36,7 +37,7 @@ return {
     dependencies = {},
     opts = {
       servers = {
-        ruff_lsp = {
+        ruff = {
           mason = true,
           init_options = {
             settings = {
@@ -44,15 +45,13 @@ return {
             },
           },
         },
-        -- Uncomment if you want Pyright for type-checking
-        -- pyright = {},
+        pyright = {},
       },
       setup = {
-
-        ruff_lsp = function()
+        ruff = function()
           require("lazyvim.util").lsp.on_attach(function(client, _)
-            if client.name == "ruff_lsp" then
-              -- Disable hover if using pylsp or pyright for that
+            if client.name == "ruff" then
+              -- Disable hover since pyright handles that
               client.server_capabilities.hoverProvider = false
             end
           end)
