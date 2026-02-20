@@ -9,6 +9,7 @@ nvim:
 
 tmux:
 	ln -sf $(PWD)/.tmux.conf ~/.tmux.conf
+	test -d ~/.tmux/plugins/tpm || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 alacritty:
 	git submodule update --init --recursive
