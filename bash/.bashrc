@@ -31,6 +31,7 @@ export PATH=$PATH:/opt/homebrew/bin
 eval "$(starship init bash)"
 alias v=nvim
 alias vi=nvim
+alias nv=nvim
 alias ..="cd .."
 alias l="ls -lah"
 
@@ -47,15 +48,41 @@ alias gco="git checkout"
 # alias gpsup="git push --set-upstream origin $(git branch)"
 alias gfa="git fetch --all --prune"
 
+function gwa() {
+  local branch="$1"
+  if [[ -z "$branch" ]]; then
+    echo "Usage: gwa <branch-name>"
+    return 1
+  fi
+  local dir="../${branch//\//-}"
+  git worktree add "$dir" -b "$branch" && \
+    cp .env "$dir/.env" 2>/dev/null && \
+    cd "$dir" && \
+    direnv allow
+}
+
 alias cpbranch="git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/' | pbcopy"
 alias cppwd="pwd | pbcopy"
 alias cpip="curl ifconfig.me | pbcopy"
+# attach to tmux with independent view (no mirroring)
+function ta() {
+  local target="${1:-main}"
+  if ! tmux has-session -t "$target" 2>/dev/null; then
+    tmux new-session -s "$target"
+  else
+    tmux new-session -t "$target"
+  fi
+}
+
+function ??() {
+  claude -p "$*"
+}
 alias sb='source ~/.bashrc'
 alias st='source ~/.tmux.conf'
 alias eb='v ~/.bashrc'
 alias tf='terraform'
 alias d='docker'
-alias d='docker-compose'
+alias dc='docker compose'
 
 # fzf aliases
 # use fp to do a fzf search and preview the files

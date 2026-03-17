@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Force-remove all git worktrees whose branch has been merged into main.
+set -euo pipefail
+
+git fetch --prune
+merged_branches=$(git branch --format='%(refname:short) %(upstream:trackshort)' | grep -v '^main ' | while read -r b status; do
+  # only consider branches that once tracked a remote branch that is now gone
+  # (i.e. deleted on remote after merge) — skip branches never pushed
+  if [ "$status" = "gone" ] && git merge-base --is-ancestor "$b" main; then
+    echo "$b"
+  fi
+done || true)
+
+if [ -z "$merged_branches" ]; then
+  echo "No merged branches found."
+  exit 0
+fi
+
+removed=0
+wt_path="" wt_branch=""
+
+while IFS= read -r line; do
+  case "$line" in
+    "worktree "*)  wt_path="${line#worktree }" ;;
+    "branch "*)    wt_branch="${line#branch refs/heads/}" ;;
+    "")
+      if [ -n "$wt_branch" ] && echo "$merged_branches" | grep -qx "$wt_branch"; then
+        echo "Removing worktree: $wt_path (branch: $wt_branch)"
+        git worktree remove --force "$wt_path"
+        ((++removed))
+      fi
+      wt_path="" wt_branch=""
+      ;;
+  esac
+done < <(git worktree list --porcelain && echo "")
+
+if [ "$removed" -eq 0 ]; then
+  echo "No worktrees to clean up."
+else
+  echo "Removed $removed worktree(s)."
+fi

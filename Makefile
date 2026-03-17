@@ -16,7 +16,13 @@ alacritty:
 	rm -rf ~/.config/alacritty
 	ln -sf $(PWD)/alacritty ~/.config/alacritty
 
-symlink: vim nvim tmux alacritty
+bash:
+	ln -sf $(PWD)/bash/.bashrc $(HOME)/.bashrc
+	mkdir -p $(HOME)/.local/bin
+	ln -sf $(PWD)/bash/git-clean-worktrees $(HOME)/.local/bin/git-clean-worktrees
+	ln -sf $(PWD)/bash/git-acp $(HOME)/.local/bin/git-acp
+
+symlink: vim nvim tmux alacritty bash
 
 # linux only
 fonts:

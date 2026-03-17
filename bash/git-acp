@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Add all, commit with message, and push to origin HEAD.
+set -euo pipefail
+
+no_verify=false
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -n|--no-verify) no_verify=true; shift ;;
+    *) break ;;
+  esac
+done
+
+if [ -z "${1:-}" ]; then
+  echo "Usage: git acp [-n|--no-verify] <commit message>"
+  exit 1
+fi
+
+commit_flags=()
+$no_verify && commit_flags+=(--no-verify)
+
+git add .
+git commit "${commit_flags[@]}" -m "$1"
+git push origin HEAD
