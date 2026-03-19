@@ -77,6 +77,10 @@ function ta() {
 function ??() {
   claude -p "$*"
 }
+
+function ?() {
+  w3m "https://duckduckgo.com/lite?q=$(echo "$*" | sed 's/ /+/g')"
+}
 alias sb='source ~/.bashrc'
 alias st='source ~/.tmux.conf'
 alias eb='v ~/.bashrc'
