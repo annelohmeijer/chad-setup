@@ -3,3 +3,8 @@ bash/.bash_keys
 lazy-lock.json
 .DS_Store
 lazyvim.json
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
