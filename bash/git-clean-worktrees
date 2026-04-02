@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
-# Force-remove all git worktrees whose branch has been merged into main.
+# Force-remove all git worktrees whose branch has been merged (incl. squash) into main.
 set -euo pipefail
 
-git fetch --prune
-merged_branches=$(git branch --format='%(refname:short) %(upstream:trackshort)' | grep -v '^main ' | while read -r b status; do
-  # only consider branches that once tracked a remote branch that is now gone
-  # (i.e. deleted on remote after merge) — skip branches never pushed
-  if [ "$status" = "gone" ] && git merge-base --is-ancestor "$b" main; then
+git fetch --prune origin
+
+merged_branches=$(git branch --format='%(refname:short)' | grep -v '^main$' | while read -r b; do
+  # Fast path: regular merge — branch tip is ancestor of origin/main
+  if git merge-base --is-ancestor "$b" origin/main 2>/dev/null; then
+    echo "$b"
+    continue
+  fi
+  # Slow path: squash merge — create synthetic squash commit and check via patch-id
+  merge_base=$(git merge-base origin/main "$b" 2>/dev/null) || continue
+  tree=$(git rev-parse "${b}^{tree}" 2>/dev/null) || continue
+  squash_commit=$(git commit-tree "$tree" -p "$merge_base" -m _) || continue
+  if git cherry origin/main "$squash_commit" 2>/dev/null | grep -q '^-'; then
     echo "$b"
   fi
 done || true)

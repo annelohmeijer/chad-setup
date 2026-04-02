@@ -55,9 +55,9 @@ function gwa() {
     return 1
   fi
   local dir="../${branch//\//-}"
-  git worktree add "$dir" -b "$branch" && \
-    cp .env "$dir/.env" 2>/dev/null && \
-    cd "$dir" && \
+  git worktree add "$dir" -b "$branch" &&
+    cp .env "$dir/.env" 2>/dev/null &&
+    cd "$dir" &&
     direnv allow
 }
 
@@ -74,16 +74,18 @@ function ta() {
   fi
 }
 
-function ??() {
-  claude -p "$*"
-}
-
 function ?() {
   w3m "https://duckduckgo.com/lite?q=$(echo "$*" | sed 's/ /+/g')"
 }
+
+function ??() {
+  claude -p "$*"
+}
 alias sb='source ~/.bashrc'
 alias st='source ~/.tmux.conf'
-alias eb='v ~/.bashrc'
+alias eb='v ~/Projects/chad-setup/bash/.bashrc'
+alias ec='v ~/.claude/CLAUDE.md'
+
 alias tf='terraform'
 alias d='docker'
 alias dc='docker compose'

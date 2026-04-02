@@ -8,4 +8,5 @@ return {
     opts = {},
   },
   { "tpope/vim-abolish" },
+  { "nanotee/zoxide.vim" },
 }
