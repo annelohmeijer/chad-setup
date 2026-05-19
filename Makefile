@@ -9,6 +9,8 @@ nvim:
 
 tmux:
 	ln -sf $(PWD)/.tmux.conf ~/.tmux.conf
+	mkdir -p ~/.config/tmux
+	ln -sf $(PWD)/tmux/tmux-window-name.sh ~/.config/tmux/tmux-window-name.sh
 	test -d ~/.tmux/plugins/tpm || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 alacritty:

@@ -1,16 +1,33 @@
 #!/usr/bin/env bash
 # Force-remove all git worktrees whose branch has been merged (incl. squash) into main.
+# Uses three detection strategies:
+#   1. git merge-base --is-ancestor (regular merge)
+#   2. GitHub API via gh (squash/rebase merges — authoritative)
+#   3. commit-tree + cherry patch-id (offline fallback)
 set -euo pipefail
 
 git fetch --prune origin
 
+# Determine the GitHub remote owner/repo for gh api calls
+gh_repo=$(gh repo view --json nameWithOwner --jq '.nameWithOwner' 2>/dev/null) || gh_repo=""
+
 merged_branches=$(git branch --format='%(refname:short)' | grep -v '^main$' | while read -r b; do
-  # Fast path: regular merge — branch tip is ancestor of origin/main
+  # Strategy 1: regular merge — branch tip is ancestor of origin/main
   if git merge-base --is-ancestor "$b" origin/main 2>/dev/null; then
     echo "$b"
     continue
   fi
-  # Slow path: squash merge — create synthetic squash commit and check via patch-id
+
+  # Strategy 2: ask GitHub whether any merged PR exists for this branch
+  if [ -n "$gh_repo" ]; then
+    pr_state=$(gh pr list --repo "$gh_repo" --head "$b" --state merged --json number --jq '.[0].number' 2>/dev/null) || pr_state=""
+    if [ -n "$pr_state" ]; then
+      echo "$b"
+      continue
+    fi
+  fi
+
+  # Strategy 3: synthetic squash commit + patch-id comparison (offline fallback)
   merge_base=$(git merge-base origin/main "$b" 2>/dev/null) || continue
   tree=$(git rev-parse "${b}^{tree}" 2>/dev/null) || continue
   squash_commit=$(git commit-tree "$tree" -p "$merge_base" -m _) || continue
@@ -35,6 +52,7 @@ while IFS= read -r line; do
       if [ -n "$wt_branch" ] && echo "$merged_branches" | grep -qx "$wt_branch"; then
         echo "Removing worktree: $wt_path (branch: $wt_branch)"
         git worktree remove --force "$wt_path"
+        git branch -D "$wt_branch" 2>/dev/null || true
         ((++removed))
       fi
       wt_path="" wt_branch=""
