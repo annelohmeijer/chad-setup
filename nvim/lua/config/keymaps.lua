@@ -6,8 +6,8 @@ vim.api.nvim_set_keymap("n", "<leader>w", ":bp|bd#<CR>", { noremap = true, silen
 
 -- telescope
 vim.keymap.set("n", "<leader><leader>", function()
-  require("telescope.builtin").find_files({ hidden = true })
-end, { desc = "Find files inluding hidden", noremap = true, silent = true })
+  require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
+end, { desc = "Find files including hidden and ignored", noremap = true, silent = true })
 vim.keymap.set("n", "<leader>sg", function()
   require("telescope.builtin").live_grep()
 end, { desc = "Live grep (including hidden)", noremap = true, silent = true })
