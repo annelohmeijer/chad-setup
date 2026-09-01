@@ -1,0 +1,133 @@
+#!/bin/bash
+# Pick and resume a Claude Code session with a styled fzf UI.
+PROJECTS=~/.claude/projects
+CACHE=~/.cache/cresume
+ME=$(whoami)
+mkdir -p "$CACHE"
+
+# Greedy path resolver: walks encoded chunks, takes shortest match that exists.
+# Handles dir names with hyphens (e.g. feat-e2e-voice-testing).
+resolve_path() {
+  local encoded="${1:1}"  # strip leading -
+  local -a chunks
+  IFS='-' read -ra chunks <<< "$encoded"
+  local path="/" seg=""
+  for chunk in "${chunks[@]}"; do
+    [ -z "$seg" ] && seg="$chunk" || seg="$seg-$chunk"
+    if [ -d "${path}${seg}" ]; then
+      path="${path}${seg}/"
+      seg=""
+    fi
+  done
+  path="${path%/}"
+  [ -d "$path" ] && echo "$path" || echo ""
+}
+
+entries=()
+while IFS= read -r jsonl; do
+  proj_dir=$(dirname "$jsonl")
+  encoded=$(basename "$proj_dir")
+  session=$(basename "$jsonl" .jsonl)
+  [[ "$session" =~ ^[0-9a-f-]{36}$ ]] || continue
+
+  # Cache the awk scan per session, keyed on jsonl mtime (bash 3.2: no assoc arrays)
+  mtime_s=$(stat -f "%m" "$jsonl")
+  cache_file="$CACHE/$session"
+  c_mtime=""
+  [ -f "$cache_file" ] && IFS=$'\t' read -r c_mtime title summary tokens first_ts last_ts < "$cache_file"
+  if [ "$c_mtime" != "$mtime_s" ]; then
+  # One pass: title (last custom-title wins), summary (first), token sum, first/last timestamp
+  # "-" placeholders: tab is IFS whitespace, empty fields would collapse and shift the read
+  IFS=$'\t' read -r title summary tokens first_ts last_ts < <(LC_ALL=C awk '
+    match($0, /"customTitle":"[^"]*"/)   { title=substr($0,RSTART+15,RLENGTH-16) }
+    summary=="" && match($0, /"summary":"[^"]*"/) { summary=substr($0,RSTART+11,RLENGTH-12) }
+    match($0, /"output_tokens":[0-9]+/)  { tok+=substr($0,RSTART+16,RLENGTH-16) }
+    match($0, /"timestamp":"[^"]*"/)     { ts=substr($0,RSTART+13,RLENGTH-14); if(first=="")first=ts; last=ts }
+    END {
+      if (title=="")   title="-"
+      if (summary=="") summary="-"
+      if (first=="")   first="-"
+      if (last=="")    last="-"
+      printf "%s\t%s\t%d\t%s\t%s\n", title, summary, tok, first, last
+    }
+  ' "$jsonl")
+    printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$mtime_s" "$title" "$summary" "$tokens" "$first_ts" "$last_ts" > "$cache_file"
+  fi
+  [ "$first_ts" = "-" ] && first_ts=""
+  [ "$last_ts" = "-" ]  && last_ts=""
+
+  [ "$title" != "-" ] && summary="$title"
+  [ "$summary" = "-" ] && summary="—"
+  [ ${#summary} -gt 52 ] && summary="${summary:0:49}..."
+
+  # Tokens: 64004 -> 64k
+  if   [ "$tokens" -ge 1000000 ]; then tok_disp=$(( tokens / 1000000 )).$(( tokens % 1000000 / 100000 ))M
+  elif [ "$tokens" -ge 1000 ];    then tok_disp="$(( tokens / 1000 ))k"
+  else tok_disp="$tokens"; fi
+
+  # Duration from first/last timestamp (UTC, drop sub-seconds)
+  dur_disp="—"
+  if [ -n "$first_ts" ] && [ -n "$last_ts" ]; then
+    t0=$(date -juf "%Y-%m-%dT%H:%M:%S" "${first_ts%%.*}" +%s 2>/dev/null)
+    t1=$(date -juf "%Y-%m-%dT%H:%M:%S" "${last_ts%%.*}" +%s 2>/dev/null)
+    if [ -n "$t0" ] && [ -n "$t1" ]; then
+      dur=$(( t1 - t0 ))
+      if   [ $dur -ge 172800 ]; then dur_disp="$(( dur / 86400 ))d"
+      elif [ $dur -ge 3600 ];   then dur_disp="$(( dur / 3600 ))h$(( dur % 3600 / 60 ))m"
+      else dur_disp="$(( dur / 60 ))m"; fi
+    fi
+  fi
+
+  mtime=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M" "$jsonl")
+  age=$(( $(date +%s) - mtime_s ))
+  [ $age -lt 300 ] && dot=$'\033[32m●\033[0m' || dot=$'\033[2m·\033[0m'
+
+  # Prefer worktree index label over decoded project path
+  index_file=~/.claude/worktree-sessions/"$session"
+  if [[ -f "$index_file" ]]; then
+    worktree=$(cat "$index_file")
+    label=$(echo "$worktree" | sed "s|$HOME/||")
+  else
+    label=$(echo "$encoded" | sed "s|-Users-${ME}||" | sed 's|^-||')
+  fi
+
+  display=$(printf "\033[2m%s\033[0m  %s  \033[33m%-45s\033[0m  %-54s  \033[36m%6s\033[0m  \033[2m%7s\033[0m  \033[2m%s\033[0m" \
+    "$mtime" "$dot" "$label" "$summary" "$tok_disp" "$dur_disp" "${session:0:8}")
+
+  entries+=("$display"$'\t'"$session"$'\t'"$encoded")
+done < <(ls -t "$PROJECTS"/*/*.jsonl 2>/dev/null)
+
+[ ${#entries[@]} -eq 0 ] && echo "No claude sessions found." && exit 1
+
+selected=$(printf '%s\n' "${entries[@]}" | fzf \
+  --ansi \
+  --delimiter=$'\t' \
+  --with-nth=1 \
+  --prompt="  Resume Claude › " \
+  --reverse \
+  --no-sort \
+  --border=rounded \
+  --color="bg+:#3c3836,bg:#282828,spinner:#d79921,hl:#83a598,fg:#ebdbb2,header:#665c54,info:#d79921,pointer:#d79921,marker:#d79921,fg+:#ebdbb2,prompt:#d79921,hl+:#83a598,border:#504945" \
+  --header=$'  \033[2mDATE              ●  PROJECT                                        TITLE/SUMMARY                                           TOKENS      DUR  ID\033[0m' \
+  --header-lines=1)
+
+[ -z "$selected" ] && exit 0
+
+session_id=$(echo "$selected" | cut -f2)
+encoded=$(echo "$selected"    | cut -f3)
+
+# Use worktree index if available, else resolve from encoded path
+index_file=~/.claude/worktree-sessions/"$session_id"
+if [[ -f "$index_file" ]]; then
+  target_path=$(cat "$index_file")
+else
+  target_path=$(resolve_path "$encoded")
+fi
+
+if [ -n "$target_path" ] && [ -d "$target_path" ]; then
+  cd "$target_path" && claude --resume "$session_id"
+else
+  echo "Could not resolve path for: $encoded"
+  echo "cd to the right directory, then run:"
+  echo "  claude --resume $session_id"
+fi

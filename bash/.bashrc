@@ -34,6 +34,7 @@ alias vi=nvim
 alias nv=nvim
 alias ..="cd .."
 alias l="ls -lah"
+alias cr=cresume
 
 # set aliases
 function gacp() {

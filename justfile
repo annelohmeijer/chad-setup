@@ -29,6 +29,7 @@ bash:
     mkdir -p ~/.local/bin
     ln -sf {{root}}/bash/git-clean-worktrees ~/.local/bin/git-clean-worktrees
     ln -sf {{root}}/bash/git-acp ~/.local/bin/git-acp
+    ln -sf {{root}}/bash/cresume ~/.local/bin/cresume
 
 symlink: vim nvim tmux alacritty bash
 
