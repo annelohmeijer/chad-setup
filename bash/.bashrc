@@ -85,6 +85,7 @@ alias sb='source ~/.bashrc'
 alias st='source ~/.tmux.conf'
 alias eb='v ~/Projects/chad-setup/bash/.bashrc'
 alias ec='v ~/.claude/CLAUDE.md'
+alias da='direnv allow'
 
 alias tf='terraform'
 alias d='docker'

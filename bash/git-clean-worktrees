@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Force-remove all git worktrees whose branch has been merged (incl. squash) into main.
 # Uses three detection strategies:
-#   1. git merge-base --is-ancestor (regular merge)
-#   2. GitHub API via gh (squash/rebase merges — authoritative)
+#   1. GitHub API via gh (squash/rebase merges — authoritative)
+#   2. git merge-base --is-ancestor (regular merge)
 #   3. commit-tree + cherry patch-id (offline fallback)
+# Branches never pushed to origin (no remote ref, no merged PR) are never deleted.
 set -euo pipefail
 
 git fetch --prune origin
@@ -12,19 +13,25 @@ git fetch --prune origin
 gh_repo=$(gh repo view --json nameWithOwner --jq '.nameWithOwner' 2>/dev/null) || gh_repo=""
 
 merged_branches=$(git branch --format='%(refname:short)' | grep -v '^main$' | while read -r b; do
-  # Strategy 1: regular merge — branch tip is ancestor of origin/main
-  if git merge-base --is-ancestor "$b" origin/main 2>/dev/null; then
-    echo "$b"
-    continue
-  fi
-
-  # Strategy 2: ask GitHub whether any merged PR exists for this branch
+  # Strategy 1: ask GitHub whether any merged PR exists for this branch.
+  # Authoritative, and also proves the branch was pushed at some point.
   if [ -n "$gh_repo" ]; then
     pr_state=$(gh pr list --repo "$gh_repo" --head "$b" --state merged --json number --jq '.[0].number' 2>/dev/null) || pr_state=""
     if [ -n "$pr_state" ]; then
       echo "$b"
       continue
     fi
+  fi
+
+  # Never delete branches that were never pushed: without origin/$b (and no
+  # merged PR above), a fresh branch off main is trivially an "ancestor" of
+  # origin/main and would be wrongly deleted.
+  git show-ref -q --verify "refs/remotes/origin/$b" || continue
+
+  # Strategy 2: regular merge — branch tip is ancestor of origin/main
+  if git merge-base --is-ancestor "$b" origin/main 2>/dev/null; then
+    echo "$b"
+    continue
   fi
 
   # Strategy 3: synthetic squash commit + patch-id comparison (offline fallback)

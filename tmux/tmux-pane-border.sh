@@ -6,7 +6,7 @@ repo=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)
 if [ -n "$repo" ]; then
     repo=$(basename "$repo")
     branch=$(git -C "$dir" symbolic-ref --short HEAD 2>/dev/null || echo "-")
-    echo "${path} | ${repo} | ${branch}"
+    echo -e "\uf07b  ${path} | \uf187  ${repo} | \ue725  ${branch}"
 else
-    echo "${path} | - | -"
+    echo -e "\uf07b  ${path}"
 fi
