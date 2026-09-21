@@ -31,7 +31,11 @@ bash:
     ln -sf {{root}}/bash/git-acp ~/.local/bin/git-acp
     ln -sf {{root}}/bash/cresume ~/.local/bin/cresume
 
-symlink: vim nvim tmux alacritty bash
+lazygit:
+    mkdir -p ~/.config/lazygit
+    ln -sf {{root}}/lazygit/config.yml ~/.config/lazygit/config.yml
+
+symlink: vim nvim tmux alacritty bash lazygit
 
 # linux only
 fonts:
@@ -41,7 +45,7 @@ fonts:
 install:
     brew update
     brew install -f \
-        just tmux neovim lazygit ripgrep alacritty \
+        just tmux neovim lazygit git-delta ripgrep alacritty \
         vim luarocks raycast \
         zoxide fzf direnv \
         pyenv

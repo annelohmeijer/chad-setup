@@ -1,0 +1,6 @@
+git:
+  pagers:
+    - colorArg: always
+      # gruvbox-dark friendly delta colors (default greens/blues are too dim)
+      pager: >-
+        delta --dark --paging=never --minus-style='syntax #5c2223' --minus-emph-style='syntax #8f2f2f' --plus-style='syntax #2f4a1e' --plus-emph-style='syntax #47702a' --file-style='bold #fabd2f' --file-decoration-style='#fabd2f ul' --hunk-header-style='bold #8ec07c' --hunk-header-decoration-style='#665c54 box'

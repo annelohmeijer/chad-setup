@@ -93,6 +93,7 @@ alias tf='terraform'
 alias d='docker'
 alias dc='docker compose'
 alias ld='lazydocker'
+alias lg='lazygit'
 
 # fzf aliases
 # use fp to do a fzf search and preview the files
