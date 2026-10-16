@@ -7,6 +7,35 @@ set -o vi
 # keybinds
 bind -x '"\C-l":clear'
 
+# vi-mode `v` edits the command line in nvim, but nvim takes the whole pane so your
+# eyes jump to the top. Edit in a tmux popup pinned to the bottom 15 rows instead.
+# -x P / -y P = pane left / pane bottom, so the popup covers the pane only, not the client.
+# ponytail: plain VISUAL=nvim stays the editor for git/crontab/etc.
+# ponytail: READLINE_LINE needs bash >= 4; Apple's /bin/bash is 3.2, where `v` keeps
+# the builtin full-screen edit-and-execute instead of silently losing the line.
+if ((BASH_VERSINFO[0] >= 4)); then
+__vi_edit_cmdline() {
+  local f
+  f=$(mktemp) || return
+  printf '%s\n' "$READLINE_LINE" > "$f"
+  if [[ -n $TMUX ]]; then
+    tmux display-popup -E -w "$(tmux display -p '#{pane_width}')" -h 15 -x P -y P -T ' cmdline ' nvim "$f"
+  else
+    "${VISUAL:-${EDITOR:-vi}}" "$f"
+  fi
+  READLINE_LINE=$(< "$f")
+  READLINE_POINT=${#READLINE_LINE}
+  rm -f "$f"
+}
+bind -m vi-command -x '"v": __vi_edit_cmdline'
+fi
+
+# fat plain-bash history as fallback for boxes without atuin (default was 500)
+HISTSIZE=100000
+HISTFILESIZE=100000
+HISTCONTROL=ignoreboth
+shopt -s histappend
+
 export VISUAL=nvim
 export EDITOR=nvim
 
@@ -95,6 +124,9 @@ alias dc='docker compose'
 alias ld='lazydocker'
 alias lg='lazygit'
 
+# atuin: `h` = same UI as ctrl-r, but prefilled: `h openssl`
+alias h='atuin search -i'
+
 # fzf aliases
 # use fp to do a fzf search and preview the files
 alias fp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
@@ -111,3 +143,8 @@ eval "$(zoxide init bash)"
 
 # restore terminal echo after aborted programs (e.g. uvicorn --reload)
 PROMPT_COMMAND="stty sane; $PROMPT_COMMAND"
+
+# atuin: ctrl-r searches every command you ever ran, with dir/exit-code/duration.
+# bash-preexec MUST be sourced after anything else that touches PROMPT_COMMAND.
+[ -f /opt/homebrew/etc/profile.d/bash-preexec.sh ] && . /opt/homebrew/etc/profile.d/bash-preexec.sh
+eval "$(atuin init bash --disable-up-arrow)"

@@ -35,7 +35,17 @@ lazygit:
     mkdir -p ~/.config/lazygit
     ln -sf {{root}}/lazygit/config.yml ~/.config/lazygit/config.yml
 
-symlink: vim nvim tmux alacritty bash lazygit
+atuin:
+    mkdir -p ~/.config/atuin
+    ln -sf {{root}}/atuin/config.toml ~/.config/atuin/config.toml
+
+claude:
+    mkdir -p ~/.claude/skills
+    for d in {{root}}/claude/skills/*/; do ln -sfn "$d" ~/.claude/skills/"$(basename "$d")"; done
+    mkdir -p ~/.claude/output-styles
+    for f in {{root}}/claude/output-styles/*.md; do ln -sf "$f" ~/.claude/output-styles/"$(basename "$f")"; done
+
+symlink: vim nvim tmux alacritty bash lazygit atuin claude
 
 # linux only
 fonts:
@@ -48,7 +58,8 @@ install:
         just tmux neovim lazygit git-delta ripgrep alacritty \
         vim luarocks raycast \
         zoxide fzf direnv \
-        pyenv
+        pyenv \
+        atuin bash-preexec jq entr hyperfine mtr termshark lazydocker
     brew install --cask obsidian
     brew install --cask font-ubuntu-mono-nerd-font
     just alacritty

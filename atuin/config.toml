@@ -1,0 +1,31 @@
+# atuin — shell history as a searchable database
+# docs: https://docs.atuin.sh/configuration/config/
+
+## Enter puts the command on the prompt line instead of running it.
+## One extra keystroke, saves you from replaying an `rm -rf` you half-remembered.
+enter_accept = false
+
+## fuzzy beats prefix matching once you have 50k commands
+search_mode = "fuzzy"
+
+## search across all dirs/sessions by default; ctrl-r cycles the filter
+filter_mode = "global"
+
+## inline UI instead of taking over the pane — behaves in tmux splits
+style = "compact"
+inline_height = 20
+
+## long docker/gcloud/curl lines get truncated in the list; preview shows the rest
+show_preview = true
+
+## respect `set -o vi` from .bashrc
+keymap_mode = "auto"
+
+## never record these
+history_filter = [
+  "^ ",            # leading space = private, same convention as HISTCONTROL=ignorespace
+  "^atuin ",
+]
+
+## homebrew does the updating
+update_check = false

@@ -5,6 +5,7 @@
 #   2. git merge-base --is-ancestor (regular merge)
 #   3. commit-tree + cherry patch-id (offline fallback)
 # Branches never pushed to origin (no remote ref, no merged PR) are never deleted.
+# Branches with an open PR are never deleted.
 set -euo pipefail
 
 git fetch --prune origin
@@ -13,6 +14,13 @@ git fetch --prune origin
 gh_repo=$(gh repo view --json nameWithOwner --jq '.nameWithOwner' 2>/dev/null) || gh_repo=""
 
 merged_branches=$(git branch --format='%(refname:short)' | grep -v '^main$' | while read -r b; do
+  # Strategy 0: an open PR means work in flight — never touch it, even if the
+  # diff already landed in main some other way (cherry-pick, duplicate branch)
+  # or an earlier PR from this same head was merged.
+  if [ -n "$gh_repo" ] && [ -n "$(gh pr list --repo "$gh_repo" --head "$b" --state open --json number --jq '.[0].number' 2>/dev/null)" ]; then
+    continue
+  fi
+
   # Strategy 1: ask GitHub whether any merged PR exists for this branch.
   # Authoritative, and also proves the branch was pushed at some point.
   if [ -n "$gh_repo" ]; then
