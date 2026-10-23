@@ -14,20 +14,20 @@ bind -x '"\C-l":clear'
 # ponytail: READLINE_LINE needs bash >= 4; Apple's /bin/bash is 3.2, where `v` keeps
 # the builtin full-screen edit-and-execute instead of silently losing the line.
 if ((BASH_VERSINFO[0] >= 4)); then
-__vi_edit_cmdline() {
-  local f
-  f=$(mktemp) || return
-  printf '%s\n' "$READLINE_LINE" > "$f"
-  if [[ -n $TMUX ]]; then
-    tmux display-popup -E -w "$(tmux display -p '#{pane_width}')" -h 15 -x P -y P -T ' cmdline ' nvim "$f"
-  else
-    "${VISUAL:-${EDITOR:-vi}}" "$f"
-  fi
-  READLINE_LINE=$(< "$f")
-  READLINE_POINT=${#READLINE_LINE}
-  rm -f "$f"
-}
-bind -m vi-command -x '"v": __vi_edit_cmdline'
+  __vi_edit_cmdline() {
+    local f
+    f=$(mktemp) || return
+    printf '%s\n' "$READLINE_LINE" >"$f"
+    if [[ -n $TMUX ]]; then
+      tmux display-popup -E -w "$(tmux display -p '#{pane_width}')" -h 15 -x P -y P -T ' cmdline ' nvim "$f"
+    else
+      "${VISUAL:-${EDITOR:-vi}}" "$f"
+    fi
+    READLINE_LINE=$(<"$f")
+    READLINE_POINT=${#READLINE_LINE}
+    rm -f "$f"
+  }
+  bind -m vi-command -x '"v": __vi_edit_cmdline'
 fi
 
 # fat plain-bash history as fallback for boxes without atuin (default was 500)
@@ -114,7 +114,7 @@ function ??() {
 }
 alias sb='source ~/.bashrc'
 alias st='source ~/.tmux.conf'
-alias eb='v ~/Projects/chad-setup/bash/.bashrc'
+alias eb='v ~/.bashrc'
 alias ec='v ~/.claude/CLAUDE.md'
 alias da='direnv allow'
 
