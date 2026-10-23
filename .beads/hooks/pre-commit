@@ -22,3 +22,7 @@ if command -v bd >/dev/null 2>&1; then
   if [ $_bd_exit -ne 0 ]; then exit $_bd_exit; fi
 fi
 # --- END BEADS INTEGRATION v0.63.3 ---
+
+# gitleaks via pre-commit (.pre-commit-config.yaml). Fail closed: no scanner, no commit.
+command -v pre-commit >/dev/null 2>&1 || { echo >&2 "pre-commit not installed: brew install pre-commit"; exit 1; }
+pre-commit run --hook-stage pre-commit || exit 1

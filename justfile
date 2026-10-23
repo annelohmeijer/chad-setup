@@ -49,7 +49,7 @@ claude:
     mkdir -p ~/.claude/output-styles
     for f in {{root}}/claude/output-styles/*.md; do ln -sf "$f" ~/.claude/output-styles/"$(basename "$f")"; done
 
-symlink: vim nvim tmux alacritty bash lazygit atuin btop claude
+symlink: hooks vim nvim tmux alacritty bash lazygit atuin btop claude
 
 # linux only
 fonts:
@@ -67,3 +67,5 @@ install:
     brew install --cask obsidian
     brew install --cask font-ubuntu-mono-nerd-font
     just alacritty
+hooks:
+    git config core.hooksPath .beads/hooks
