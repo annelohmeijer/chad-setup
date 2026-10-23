@@ -39,13 +39,17 @@ atuin:
     mkdir -p ~/.config/atuin
     ln -sf {{root}}/atuin/config.toml ~/.config/atuin/config.toml
 
+btop:
+    mkdir -p ~/.config/btop
+    ln -sf {{root}}/btop/btop.conf ~/.config/btop/btop.conf
+
 claude:
     mkdir -p ~/.claude/skills
     for d in {{root}}/claude/skills/*/; do ln -sfn "$d" ~/.claude/skills/"$(basename "$d")"; done
     mkdir -p ~/.claude/output-styles
     for f in {{root}}/claude/output-styles/*.md; do ln -sf "$f" ~/.claude/output-styles/"$(basename "$f")"; done
 
-symlink: vim nvim tmux alacritty bash lazygit atuin claude
+symlink: vim nvim tmux alacritty bash lazygit atuin btop claude
 
 # linux only
 fonts:
@@ -59,7 +63,7 @@ install:
         vim luarocks raycast \
         zoxide fzf direnv \
         pyenv \
-        atuin bash-preexec jq entr hyperfine mtr termshark lazydocker
+        atuin bash-preexec jq entr hyperfine mtr termshark lazydocker btop
     brew install --cask obsidian
     brew install --cask font-ubuntu-mono-nerd-font
     just alacritty
