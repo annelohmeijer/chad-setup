@@ -57,7 +57,7 @@ export PATH=$PATH:/opt/homebrew/bin
 
 [[ -f ~/.bash_wd ]] && source ~/.bash_wd
 
-eval "$(starship init bash)"
+command -v starship >/dev/null && eval "$(starship init bash)"
 # -w logs every keystroke (builtin) for vim-habit analysis; local file only
 alias v='nvim -w ~/.local/state/nvim/keys.log'
 alias vi='nvim -w ~/.local/state/nvim/keys.log'
@@ -133,8 +133,8 @@ alias fp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}
 # search for a file with fzf and open it in vim
 alias vf='v $(fp)'
 
-eval "$(direnv hook bash)"
-eval "$(zoxide init bash)"
+command -v direnv >/dev/null && eval "$(direnv hook bash)"
+command -v zoxide >/dev/null && eval "$(zoxide init bash)"
 
 # manually export LANG such that blesh does not complain
 # export LANG=en_US.UTF-8
@@ -147,4 +147,4 @@ PROMPT_COMMAND="stty sane; $PROMPT_COMMAND"
 # atuin: ctrl-r searches every command you ever ran, with dir/exit-code/duration.
 # bash-preexec MUST be sourced after anything else that touches PROMPT_COMMAND.
 [ -f /opt/homebrew/etc/profile.d/bash-preexec.sh ] && . /opt/homebrew/etc/profile.d/bash-preexec.sh
-eval "$(atuin init bash --disable-up-arrow)"
+command -v atuin >/dev/null && eval "$(atuin init bash --disable-up-arrow)"

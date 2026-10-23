@@ -1,0 +1,6 @@
+{
+    "id": "chad-tools",
+    "version": "1.0.0",
+    "name": "chad-setup terminal tools",
+    "description": "nvim, starship, lazygit and the CLI tools .bashrc expects"
+}
