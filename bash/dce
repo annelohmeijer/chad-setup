@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Enter the devcontainer of the current worktree (or $1). Marks the tmux pane with
+# @devc so splits from it open in the same container (tmux/tmux-split.sh).
+set -euo pipefail
+dir=${1:-$(git rev-parse --show-toplevel)}
+if [[ -n ${TMUX_PANE:-} ]]; then
+  tmux set -p -t "$TMUX_PANE" @devc "$dir"
+  trap 'tmux set -pu -t "$TMUX_PANE" @devc' EXIT
+fi
+devcontainer exec --workspace-folder "$dir" bash

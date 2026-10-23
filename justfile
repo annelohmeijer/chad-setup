@@ -17,6 +17,7 @@ tmux:
     mkdir -p ~/.config/tmux
     ln -sf {{root}}/tmux/tmux-window-name.sh ~/.config/tmux/tmux-window-name.sh
     ln -sf {{root}}/tmux/tmux-pane-border.sh ~/.config/tmux/tmux-pane-border.sh
+    ln -sf {{root}}/tmux/tmux-split.sh ~/.config/tmux/tmux-split.sh
     test -d ~/.tmux/plugins/tpm || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 alacritty:
@@ -30,6 +31,7 @@ bash:
     ln -sf {{root}}/bash/git-clean-worktrees ~/.local/bin/git-clean-worktrees
     ln -sf {{root}}/bash/git-acp ~/.local/bin/git-acp
     ln -sf {{root}}/bash/cresume ~/.local/bin/cresume
+    ln -sf {{root}}/bash/dce ~/.local/bin/dce
 
 lazygit:
     mkdir -p ~/.config/lazygit
