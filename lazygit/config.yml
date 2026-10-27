@@ -8,3 +8,18 @@ git:
 os:
   # `o` opens the file in nvim in a new tmux pane to the right
   open: 'tmux split-window -h -c "$PWD" nvim -- {{filename}}'
+
+customCommands:
+  # `<c-r>` on a file: turn a review remark into a rule in the repo docs (needs the repo's `remember` skill)
+  - key: "<c-r>"
+    context: "files"
+    description: "Claude: remember rule"
+    prompts:
+      - type: "input"
+        title: "Rule"
+        key: "Rule"
+    command: >-
+      claude -p --permission-mode acceptEdits
+      {{ printf "/remember %s (from: %s)" .Form.Rule .SelectedPath | quote }} < /dev/null
+    loadingText: "Claude is writing the rule..."
+    output: popup

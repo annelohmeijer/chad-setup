@@ -18,6 +18,7 @@ tmux:
     ln -sf {{root}}/tmux/tmux-window-name.sh ~/.config/tmux/tmux-window-name.sh
     ln -sf {{root}}/tmux/tmux-pane-border.sh ~/.config/tmux/tmux-pane-border.sh
     ln -sf {{root}}/tmux/tmux-split.sh ~/.config/tmux/tmux-split.sh
+    ln -sf {{root}}/tmux/tmux-open.sh ~/.config/tmux/tmux-open.sh
     test -d ~/.tmux/plugins/tpm || git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 alacritty:
